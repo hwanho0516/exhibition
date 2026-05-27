@@ -588,23 +588,15 @@ function openCard(a, index) {
   currentIndex = index ?? artists.findIndex(x => x.number === a.number);
   const cardImgEl = document.getElementById('cardImg');
 if (a.video) {
-  cardImgEl.style.display = 'none';
-  let vid = document.getElementById('cardVideo');
-  if (!vid) {
-    vid = document.createElement('video');
-    vid.id = 'cardVideo';
-    vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
-    vid.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
-    document.getElementById('cardFront').appendChild(vid);
+  cardImgEl.style.display = 'block';
+  cardImgEl.src = a.img || '';
+  const vid = document.getElementById('cardVideo');
+  if (vid) {
+    vid.pause();
+    vid.src = '';
+    vid.style.display = 'none';
   }
-  vid.src = a.video;
-  vid.style.display = 'block';
-  document.getElementById('cardLoading').style.display = 'flex';
-  vid.load();
-  vid.play().catch(() => {});
-  vid.oncanplay = () => {
-    document.getElementById('cardLoading').style.display = 'none';
-  };
+  document.getElementById('cardLoading').style.display = 'none';
 } else {
   cardImgEl.style.display = 'block';
   cardImgEl.src = a.img || '';
@@ -645,10 +637,30 @@ document.getElementById('cardScene').addEventListener('click', function(e) {
   if (e.target.closest('#cardDownload')) return;
   cardFlip.classList.toggle('flipped');
   const hint = document.querySelector('.card-hint-below');
+  const a = artists[currentIndex];
   if (cardFlip.classList.contains('flipped')) {
     hint.style.visibility = 'visible';
   } else {
     hint.style.visibility = 'hidden';
+    if (a.video) {
+      let vid = document.getElementById('cardVideo');
+      if (!vid) {
+        vid = document.createElement('video');
+        vid.id = 'cardVideo';
+        vid.autoplay = true; vid.loop = true; vid.muted = true; vid.playsInline = true;
+        vid.style.cssText = 'width:100%;height:100%;object-fit:cover;position:absolute;inset:0;';
+        document.getElementById('cardFront').appendChild(vid);
+      }
+      document.getElementById('cardImg').style.display = 'none';
+      vid.src = a.video;
+      vid.style.display = 'block';
+      document.getElementById('cardLoading').style.display = 'flex';
+      vid.load();
+      vid.play().catch(() => {});
+      vid.oncanplay = () => {
+        document.getElementById('cardLoading').style.display = 'none';
+      };
+    }
   }
 });
 
