@@ -553,7 +553,7 @@
 
     </div><!-- .card-flip -->
     <div class="card-hint-below">
-      <span class="hint-text">클릭하면 영상을 볼 수 있습니다</span>
+      <span class="hint-text">화면을 클릭하면 영상을 볼 수 있습니다</span>
     </div>
   </div><!-- .card-scene -->
 </div><!-- #cardOverlay -->
@@ -627,7 +627,7 @@ if (a.video) {
   cardFlip.classList.add('flipped');
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
-  document.querySelector('.card-hint-below').style.visibility = 'hidden';
+  document.querySelector('.card-hint-below').style.visibility = 'visible';
   const backTop = document.querySelector('.card-back-top');
   if (backTop) {
     backTop.scrollTop = 0;
@@ -727,14 +727,12 @@ artists.forEach(a => {
 document.getElementById('cardPrev').addEventListener('click', function(e) {
   e.stopPropagation();
   currentIndex = (currentIndex - 1 + artists.length) % artists.length;
-  cardFlip.classList.remove('flipped');
   openCard(artists[currentIndex], currentIndex);
 });
 
 document.getElementById('cardNext').addEventListener('click', function(e) {
   e.stopPropagation();
   currentIndex = (currentIndex + 1) % artists.length;
-  cardFlip.classList.remove('flipped');
   openCard(artists[currentIndex], currentIndex);
 });
 
