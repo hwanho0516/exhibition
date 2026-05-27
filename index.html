@@ -646,9 +646,9 @@ document.getElementById('cardScene').addEventListener('click', function(e) {
   cardFlip.classList.toggle('flipped');
   const hint = document.querySelector('.card-hint-below');
   if (cardFlip.classList.contains('flipped')) {
-    hint.style.visibility = 'hidden';
-  } else {
     hint.style.visibility = 'visible';
+  } else {
+    hint.style.visibility = 'hidden';
   }
 });
 
