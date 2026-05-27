@@ -553,7 +553,7 @@
 
     </div><!-- .card-flip -->
     <div class="card-hint-below">
-      <span class="hint-text">영상을 클릭하면 작품설명이 보입니다</span>
+      <span class="hint-text">클릭하면 영상을 볼 수 있습니다</span>
     </div>
   </div><!-- .card-scene -->
 </div><!-- #cardOverlay -->
@@ -624,9 +624,10 @@ if (a.video) {
   document.getElementById('cardDownload').href      = a.highres || a.img || '#';
   document.getElementById('cardDownload').download  = `${a.name}_작품.jpg`;
 
-  cardFlip.classList.remove('flipped');
+  cardFlip.classList.add('flipped');
   overlay.classList.add('active');
   document.body.style.overflow = 'hidden';
+  document.querySelector('.card-hint-below').style.visibility = 'hidden';
   const backTop = document.querySelector('.card-back-top');
   if (backTop) {
     backTop.scrollTop = 0;
@@ -648,6 +649,7 @@ document.getElementById('cardScene').addEventListener('click', function(e) {
     hint.style.visibility = 'hidden';
   } else {
     hint.style.visibility = 'visible';
+  }
   }
 });
 
