@@ -684,6 +684,16 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// URL 파라미터로 작가 카드 자동 열기
+window.addEventListener('load', () => {
+  const params = new URLSearchParams(window.location.search);
+  const artistNum = params.get('artist');
+  if (artistNum) {
+    const artist = artists.find(a => a.number === artistNum);
+    if (artist) openCard(artist, artists.indexOf(artist));
+  }
+});
+
 // ── 카드 그리드 렌더링 ──
 const grid = document.getElementById('artistsGrid');
 artists.forEach(a => {
