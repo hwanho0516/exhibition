@@ -201,15 +201,17 @@ body {
 }
 #modalVideo {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
   display: block;
 }
 
 /* 영상 모드 확장 */
 .modal-image-wrap.video-mode {
   aspect-ratio: auto;
-  height: 72vh;
+  height: auto;
+  max-height: 85vh;
   background: #000;
 }
 
@@ -353,8 +355,8 @@ footer {
   .artists-grid { grid-template-columns: repeat(2, 1fr); gap: 20px 14px; }
   .modal-inner { padding: 20px 0 40px; width: 92vw; }
   .modal-topbar { margin-bottom: 16px; }
-  .modal-image-wrap img,
-  #modalVideo { max-height: 44vh; }
+  .modal-image-wrap img { max-height: 44vh; }
+  #modalVideo { max-height: 60vh; }
   .modal-text-area { margin-top: 20px; }
   .modal-artist-name { font-size: 12px; margin-bottom: 4px; }
   .modal-artwork-title { font-size: 17px; margin-bottom: 8px; }
@@ -571,6 +573,8 @@ artists.forEach((a, i) => {
 function openModal(index) {
   currentIndex = index;
   isVideoMode = false;
+  document.getElementById('modalImageWrap').style.height = '';
+  document.getElementById('modalImageWrap').classList.remove('video-mode');
   const a = artists[index];
 
   document.getElementById('modalCounter').textContent = `${String(index+1).padStart(2,'0')} / ${String(artists.length).padStart(2,'0')}`;
@@ -613,35 +617,39 @@ document.getElementById('modalImageWrap').addEventListener('click', () => {
   const vidEl = document.getElementById('modalVideo');
   const loading = document.getElementById('modalLoading');
   const hint = document.getElementById('modalVideoHint');
+const wrap = document.getElementById('modalImageWrap');
 
   if (!isVideoMode) {
-  isVideoMode = true;
-
-  document.getElementById('modalImageWrap')
-    .classList.add('video-mode');
-
-  imgEl.style.display = 'none';
-  loading.style.display = 'flex';
-  vidEl.src = a.video;
+    isVideoMode = true;
+    wrap.classList.add('video-mode');
+    imgEl.style.display = 'none';
+    loading.style.display = 'flex';
+    vidEl.src = a.video;
     vidEl.style.display = 'block';
     vidEl.load();
     vidEl.play().catch(() => {});
-    vidEl.oncanplay = () => { loading.style.display = 'none'; };
+    vidEl.onloadedmetadata = () => {
+      const ratio = vidEl.videoWidth / vidEl.videoHeight;
+      const maxW = wrap.clientWidth;
+      const maxH = window.innerHeight * 0.85;
+      wrap.style.height = (maxW / ratio <= maxH)
+        ? (maxW / ratio) + 'px'
+        : maxH + 'px';
+      loading.style.display = 'none';
+    };
     hint.style.display = 'none';
   } else {
-  isVideoMode = false;
-
-  document.getElementById('modalImageWrap')
-    .classList.remove('video-mode');
-
-  vidEl.pause();
-  vidEl.src = '';
-  vidEl.style.display = 'none';
+    isVideoMode = false;
+    wrap.classList.remove('video-mode');
+    wrap.style.height = '';
+    vidEl.pause();
+    vidEl.src = '';
+    vidEl.style.display = 'none';
     imgEl.style.display = 'block';
     loading.style.display = 'none';
     if (a.video) hint.style.display = 'block';
   }
-});
+  }); 
 
 /* ── 닫기 ── */
 document.getElementById('cardClose').addEventListener('click', closeModal);
