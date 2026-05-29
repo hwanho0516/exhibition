@@ -202,17 +202,15 @@ body {
 #modalVideo {
   width: 100%;
   height: auto;
-  max-height: 85vh;
-  object-fit: contain;
   display: block;
+  border-radius: 6px;
 }
 
-/* 영상 모드 확장 */
 .modal-image-wrap.video-mode {
   aspect-ratio: auto;
-  height: auto;
-  max-height: 85vh;
-  background: #000;
+  height: auto !important;
+  overflow: visible;
+  background: transparent;
 }
 
 /* loading overlay */
@@ -629,12 +627,7 @@ const wrap = document.getElementById('modalImageWrap');
     vidEl.load();
     vidEl.play().catch(() => {});
     vidEl.onloadedmetadata = () => {
-      const ratio = vidEl.videoWidth / vidEl.videoHeight;
-      const maxW = wrap.clientWidth;
-      const maxH = window.innerHeight * 0.85;
-      wrap.style.height = (maxW / ratio <= maxH)
-        ? (maxW / ratio) + 'px'
-        : maxH + 'px';
+      wrap.style.height = 'auto';
       loading.style.display = 'none';
     };
     hint.style.display = 'none';
